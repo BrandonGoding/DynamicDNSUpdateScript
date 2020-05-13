@@ -1,6 +1,7 @@
+from os import path
 from requests import get, post
 from requests.auth import HTTPBasicAuth
-from os import path
+from decouple import config
 
 FILENAME = "ip_address.txt"
 
@@ -28,7 +29,7 @@ class DomainNameEntry:
 
     def update_dynamic_dns(self):
         url = f"https://domains.google.com/nic/update?hostname=farm-server.brandongoding.com&myip={self.public_ip}"
-        update = post(url, auth=HTTPBasicAuth('', ''))
+        update = post(url, auth=HTTPBasicAuth(config('DNS_USERNAME'), config('DNS_PASSWORD')))
         print("UPDATING SHIT")
         print(update.status_code)
         print(update.text)

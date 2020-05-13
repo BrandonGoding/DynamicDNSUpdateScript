@@ -1,0 +1,5 @@
+.env
+ip_address.txt
+.idea
+venv/
+
