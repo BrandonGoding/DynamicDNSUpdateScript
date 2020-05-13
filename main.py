@@ -1,5 +1,8 @@
-from requests import get
+from requests import get, post
+from requests.auth import HTTPBasicAuth
 from os import path
+
+FILENAME = "ip_address.txt"
 
 class DomainNameEntry:
     public_ip = None
@@ -12,19 +15,23 @@ class DomainNameEntry:
         return True
 
     def check_if_file_exists(self):
-        if not path.exists("ip_address.txt"):
-            outF = open("ip_address.txt", "w")
+        if not path.exists(FILENAME):
+            outF = open(FILENAME, "w")
             outF.write(self.public_ip)
             outF.close()
             return True
-        with open('ip_address.txt', 'r') as file:
+        with open(FILENAME, 'r') as file:
             data = file.read().replace('\n', '')
         if data != self.public_ip:
             return True
         return False
 
     def update_dynamic_dns(self):
+        url = f"https://domains.google.com/nic/update?hostname=farm-server.brandongoding.com&myip={self.public_ip}"
+        update = post(url, auth=HTTPBasicAuth('', ''))
         print("UPDATING SHIT")
+        print(update.status_code)
+        print(update.text)
 
 
 if __name__ == "__main__":
