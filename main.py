@@ -5,11 +5,12 @@ from decouple import config
 
 FILENAME = "ip_address.txt"
 
+
 class DomainNameEntry:
     public_ip = None
 
     def set_public_address(self):
-        ip = get('https://api.ipify.org')
+        ip = get("https://api.ipify.org")
         if ip.status_code != 200:
             return False
         self.public_ip = ip.text
@@ -21,18 +22,17 @@ class DomainNameEntry:
             outF.write(self.public_ip)
             outF.close()
             return True
-        with open(FILENAME, 'r') as file:
-            data = file.read().replace('\n', '')
+        with open(FILENAME, "r") as file:
+            data = file.read().replace("\n", "")
         if data != self.public_ip:
             return True
         return False
 
     def update_dynamic_dns(self):
         url = f"https://domains.google.com/nic/update?hostname=farm-server.brandongoding.com&myip={self.public_ip}"
-        update = post(url, auth=HTTPBasicAuth(config('DNS_USERNAME'), config('DNS_PASSWORD')))
-        print("UPDATING SHIT")
-        print(update.status_code)
-        print(update.text)
+        update = post(
+            url, auth=HTTPBasicAuth(config("DNS_USERNAME"), config("DNS_PASSWORD"))
+        )
 
 
 if __name__ == "__main__":
