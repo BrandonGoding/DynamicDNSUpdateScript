@@ -1,5 +1,5 @@
 from requests import get
-
+from os import path
 
 class DomainNameEntry:
     public_ip = None
@@ -11,11 +11,24 @@ class DomainNameEntry:
         self.public_ip = ip.text
         return True
 
-    def update_dynamic_dns(self):
+    def check_if_file_exists(self):
+        if not path.exists("ip_address.txt"):
+            outF = open("ip_address.txt", "w")
+            outF.write(self.public_ip)
+            outF.close()
+            return True
+        with open('ip_address.txt', 'r') as file:
+            data = file.read().replace('\n', '')
+        if data != self.public_ip:
+            return True
         return False
+
+    def update_dynamic_dns(self):
+        print("UPDATING SHIT")
 
 
 if __name__ == "__main__":
     dns = DomainNameEntry()
     if dns.set_public_address():
-        print(dns.public_ip)
+        if dns.check_if_file_exists():
+            dns.update_dynamic_dns()
