@@ -3,7 +3,7 @@ from requests import get, post
 from requests.auth import HTTPBasicAuth
 from decouple import config
 
-FILENAME = "ip_address.txt"
+FILENAME = f'{config("DNS_CODE_DIR")}DynamicDNSUpdateScript/ip_address.txt'
 
 
 class DomainNameEntry:
